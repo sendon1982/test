@@ -1,0 +1,104 @@
+openapi: 3.0.1
+info:
+  title: Social sports center
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Court management
+    description: Manage court based on certain rules
+
+
+paths:
+  '/courts/register':
+    post:
+      tags:
+        - Court Management
+      summary: Register a court
+      operationId: registerCourt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourtRegisterRequest'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourtRegisterResponse'
+        404:
+          description: Not found
+          content: { }
+        500:
+          description: 'Internal server error, try request again.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+
+  schemas:
+    CourtRegisterRequest:
+      type: object
+      properties:
+        player:
+          type: string
+        date:
+          type: string
+          format: date
+          example: "2017-07-21"
+        courtNumber:
+          $ref: '#/components/schemas/CourtEnum'
+      required:
+        - player
+        - date
+        - courtNumber
+
+    CourtRegisterResponse:
+      type: object
+      properties:
+        player:
+          type: string
+        date:
+          type: string
+          format: date
+          example: "2017-07-21"
+        courtNumber:
+          $ref: '#/components/schemas/CourtEnum'
+        availableSpot:
+          type: integer
+          default: 4
+
+    CourtInfo:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2017-07-21"
+        courtNumber:
+          $ref: '#/components/schemas/CourtEnum'
+        availableSpot:
+          type: integer
+
+    CourtEnum:
+      type: string
+      enum:
+        - COURT1
+        - COURT2
+        - COURT3
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
